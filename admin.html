@@ -145,7 +145,6 @@
                 <div class="admin-card-meta">
                   <span>${post.category}</span>
                   <span>${post.date}</span>
-                  <span>${post.readingTime}分钟</span>
                   <span>${post.tags.join(', ')}</span>
                 </div>
               </div>
@@ -165,11 +164,19 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
               <div class="admin-form-group">
                 <label>分类</label>
-                <select onchange="updatePost(${idx},'category',this.value)">
-                  ${['C++','算法','系统','经验'].map(c =>
-                    `<option value="${c}" ${c === post.category ? 'selected' : ''}>${c}</option>`
-                  ).join('')}
-                </select>
+                <div style="display:flex;flex-wrap:wrap;gap:0.5rem;align-items:flex-start">
+                  <select onchange="handleCategoryChange(${idx}, this)">
+                    ${['C++','算法','系统','经验'].map(c =>
+                      `<option value="${c}" ${c === post.category ? 'selected' : ''}>${c}</option>`
+                    ).join('')}
+                    <option value="__custom__" ${!['C++','算法','系统','经验'].includes(post.category) ? 'selected' : ''}>✏️ 自定义...</option>
+                  </select>
+                  <input type="text" class="custom-cat-input"
+                         value="${!['C++','算法','系统','经验'].includes(post.category) ? escapeAttr(post.category) : ''}"
+                         placeholder="输入自定义分类"
+                         onchange="updatePost(${idx},'category',this.value)"
+                         style="flex:1;min-width:120px;${!['C++','算法','系统','经验'].includes(post.category) ? '' : 'display:none'}">
+                </div>
               </div>
               <div class="admin-form-group">
                 <label>日期</label>
@@ -183,10 +190,6 @@
             <div class="admin-form-group">
               <label>简介</label>
               <textarea rows="2" onchange="updatePost(${idx},'summary',this.value)">${escapeAttr(post.summary)}</textarea>
-            </div>
-            <div class="admin-form-group">
-              <label>阅读时间（分钟）</label>
-              <input type="number" value="${post.readingTime}" onchange="updatePost(${idx},'readingTime',parseInt(this.value)||1)" min="1" max="999">
             </div>
             <div class="admin-form-group">
               <label>正文（Markdown 格式）</label>
@@ -213,6 +216,21 @@
       editingData.posts[idx][field] = value;
     }
 
+    function handleCategoryChange(idx, select) {
+      const container = select.parentElement;
+      const input = container.querySelector('.custom-cat-input');
+      if (select.value === '__custom__') {
+        input.style.display = 'inline-block';
+        input.focus();
+        if (input.value.trim()) {
+          updatePost(idx, 'category', input.value.trim());
+        }
+      } else {
+        input.style.display = 'none';
+        updatePost(idx, 'category', select.value);
+      }
+    }
+
     function addNewPost() {
       const now = new Date().toISOString().slice(0, 10);
       editingData.posts.unshift({
@@ -222,7 +240,6 @@
         category: 'C++',
         tags: ['新手'],
         summary: '文章简介',
-        readingTime: 5,
         content: '# 新文章\n\n在这里写正文...'
       });
       renderPosts();

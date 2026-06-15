@@ -85,7 +85,6 @@ function renderPosts(posts) {
         </div>
         <div class="blog-card-meta">
           <span>${formatDate(post.date)}</span>
-          <span>${post.readingTime} 分钟阅读</span>
         </div>
       </div>
     </article>
