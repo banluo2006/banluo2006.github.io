@@ -1,0 +1,51 @@
+/* ===== Responsive ===== */
+
+/* Tablet */
+@media (max-width: 1023px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.15rem; }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* Print */
+@media print {
+  .header,
+  .footer,
+  .back-to-top,
+  .progress-bar,
+  .post-toc-wrapper,
+  .mobile-toc-toggle,
+  .code-copy-btn {
+    display: none !important;
+  }
+
+  .main {
+    padding-top: 0;
+  }
+
+  .post-content {
+    max-width: 100%;
+  }
+}
