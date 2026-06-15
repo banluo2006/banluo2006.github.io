@@ -236,3 +236,47 @@
     height: 36px;
   }
 }
+
+/* ---- Color Palette ---- */
+.color-palette {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 0.5rem;
+  border-right: 1px solid var(--color-border);
+  margin-right: 0.5rem;
+}
+
+.color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.color-dot:hover {
+  transform: scale(1.25);
+  border-color: var(--color-text-muted);
+}
+
+.color-dot.active {
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 1px var(--color-card);
+  transform: scale(1.15);
+}
+
+@media (max-width: 640px) {
+  .color-dot {
+    width: 15px;
+    height: 15px;
+  }
+  .color-palette {
+    padding: 0 0.3rem;
+    margin-right: 0.3rem;
+    gap: 2px;
+  }
+}

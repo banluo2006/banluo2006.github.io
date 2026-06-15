@@ -76,3 +76,126 @@
   --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
+/* ===== Color Schemes ===== */
+/* 默认靛蓝（已定义在上方，无需重复） */
+
+/* 🌿 青草绿 */
+[data-color="green"] {
+  --color-primary: #10b981;
+  --color-primary-hover: #059669;
+  --color-primary-light: #ecfdf5;
+  --color-accent: #f59e0b;
+  --color-tag-bg: #ecfdf5;
+  --color-tag-text: #10b981;
+  --color-primary-bg: rgba(16, 185, 129, 0.08);
+}
+[data-color="green"][data-theme="dark"] {
+  --color-primary: #34d399;
+  --color-primary-hover: #10b981;
+  --color-primary-light: #022c22;
+  --color-accent: #fbbf24;
+  --color-tag-bg: rgba(16, 185, 129, 0.15);
+  --color-tag-text: #34d399;
+  --color-primary-bg: rgba(52, 211, 153, 0.1);
+}
+
+/* 🌊 海洋蓝 */
+[data-color="ocean"] {
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-light: #eff6ff;
+  --color-accent: #06b6d4;
+  --color-tag-bg: #eff6ff;
+  --color-tag-text: #3b82f6;
+  --color-primary-bg: rgba(59, 130, 246, 0.08);
+}
+[data-color="ocean"][data-theme="dark"] {
+  --color-primary: #60a5fa;
+  --color-primary-hover: #3b82f6;
+  --color-primary-light: #172554;
+  --color-accent: #22d3ee;
+  --color-tag-bg: rgba(59, 130, 246, 0.15);
+  --color-tag-text: #60a5fa;
+  --color-primary-bg: rgba(96, 165, 250, 0.1);
+}
+
+/* 🌸 樱花粉 */
+[data-color="pink"] {
+  --color-primary: #ec4899;
+  --color-primary-hover: #db2777;
+  --color-primary-light: #fdf2f8;
+  --color-accent: #f97316;
+  --color-tag-bg: #fdf2f8;
+  --color-tag-text: #ec4899;
+  --color-primary-bg: rgba(236, 72, 153, 0.08);
+}
+[data-color="pink"][data-theme="dark"] {
+  --color-primary: #f472b6;
+  --color-primary-hover: #ec4899;
+  --color-primary-light: #2d0a1e;
+  --color-accent: #fb923c;
+  --color-tag-bg: rgba(236, 72, 153, 0.15);
+  --color-tag-text: #f472b6;
+  --color-primary-bg: rgba(244, 114, 182, 0.1);
+}
+
+/* 🍊 日落橙 */
+[data-color="orange"] {
+  --color-primary: #f97316;
+  --color-primary-hover: #ea580c;
+  --color-primary-light: #fff7ed;
+  --color-accent: #ef4444;
+  --color-tag-bg: #fff7ed;
+  --color-tag-text: #f97316;
+  --color-primary-bg: rgba(249, 115, 22, 0.08);
+}
+[data-color="orange"][data-theme="dark"] {
+  --color-primary: #fb923c;
+  --color-primary-hover: #f97316;
+  --color-primary-light: #2d1504;
+  --color-accent: #f87171;
+  --color-tag-bg: rgba(249, 115, 22, 0.15);
+  --color-tag-text: #fb923c;
+  --color-primary-bg: rgba(251, 146, 60, 0.1);
+}
+
+/* 🪐 紫罗兰 */
+[data-color="purple"] {
+  --color-primary: #8b5cf6;
+  --color-primary-hover: #7c3aed;
+  --color-primary-light: #f5f3ff;
+  --color-accent: #ec4899;
+  --color-tag-bg: #f5f3ff;
+  --color-tag-text: #8b5cf6;
+  --color-primary-bg: rgba(139, 92, 246, 0.08);
+}
+[data-color="purple"][data-theme="dark"] {
+  --color-primary: #a78bfa;
+  --color-primary-hover: #8b5cf6;
+  --color-primary-light: #1e1035;
+  --color-accent: #f472b6;
+  --color-tag-bg: rgba(139, 92, 246, 0.15);
+  --color-tag-text: #a78bfa;
+  --color-primary-bg: rgba(167, 139, 250, 0.1);
+}
+
+/* 🏔️ 极简灰 */
+[data-color="gray"] {
+  --color-primary: #475569;
+  --color-primary-hover: #334155;
+  --color-primary-light: #f8fafc;
+  --color-accent: #64748b;
+  --color-tag-bg: #f1f5f9;
+  --color-tag-text: #475569;
+  --color-primary-bg: rgba(71, 85, 105, 0.08);
+}
+[data-color="gray"][data-theme="dark"] {
+  --color-primary: #94a3b8;
+  --color-primary-hover: #64748b;
+  --color-primary-light: #0f172a;
+  --color-accent: #cbd5e1;
+  --color-tag-bg: rgba(71, 85, 105, 0.2);
+  --color-tag-text: #94a3b8;
+  --color-primary-bg: rgba(148, 163, 184, 0.1);
+}
