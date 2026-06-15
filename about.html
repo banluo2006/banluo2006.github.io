@@ -68,7 +68,7 @@
         <section class="about-section">
           <h2 class="section-title" style="text-align:center">📅 学习历程</h2>
           <p class="section-subtitle" style="text-align:center">每一步都算数</p>
-          <div class="about-section-card">
+          <div class="about-section-card" style="position:relative">
             <div class="timeline" id="timeline"></div>
           </div>
         </section>
@@ -84,6 +84,21 @@
       </div>
     </div>
   </main>
+
+  <!-- Edit Controls -->
+  <button id="edit-toggle-btn" class="about-edit-fab" onclick="toggleEditMode()" title="编辑学习历程">
+    <svg class="fab-icon" viewBox="0 0 24 24" id="fab-icon">
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+    </svg>
+    <span class="fab-label" id="fab-label">编辑历程</span>
+  </button>
+
+  <div id="edit-save-bar" class="edit-save-bar">
+    <button class="edit-save-btn edit-set-folder-btn" onclick="selectTimelineFolder()">📂 选择 data 文件夹</button>
+    <button id="edit-save-btn" class="edit-save-btn edit-save-primary" onclick="saveTimeline()">💾 保存修改</button>
+  </div>
+
+  <div id="edit-toast" class="edit-toast"></div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -122,6 +137,23 @@
         btn.textContent = '✅ 已复制';
         setTimeout(() => btn.textContent = orig, 2000);
       });
+    }
+
+    async function selectTimelineFolder() {
+      try {
+        if (!window.showDirectoryPicker) {
+          showTimelineToast('您的浏览器不支持直接保存，将使用下载方式', 'error');
+          return;
+        }
+        dataDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        document.querySelector('.edit-set-folder-btn').textContent = '✅ 已选择';
+        document.querySelector('.edit-set-folder-btn').style.borderColor = 'var(--color-success)';
+        showTimelineToast('✅ 已选择文件夹，点「保存修改」直接写入！', 'success');
+      } catch (e) {
+        if (e.name !== 'AbortError') {
+          showTimelineToast('选择文件夹失败：' + e.message, 'error');
+        }
+      }
     }
   </script>
 </body>

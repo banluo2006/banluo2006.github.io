@@ -81,12 +81,12 @@
           </div>
           <div class="admin-actions">
             <button class="admin-btn admin-btn-outline" id="set-folder-btn" onclick="setDataFolder()">📂 选择 data 文件夹</button>
-            <button class="admin-btn admin-btn-primary" id="save-btn" onclick="saveAll()" disabled>💾 保存更改</button>
+            <button class="admin-btn admin-btn-primary" id="save-btn" onclick="saveAll()">💾 保存更改</button>
           </div>
         </div>
 
         <div class="admin-tip" id="admin-tip">
-          ⚡ 先点击「选择 data 文件夹」，选中 <code style="font-size:0.85rem">blog\data</code> 目录 → 之后点「保存更改」直接写入文件！
+          ⚡ 点「保存更改」直接下载 <code style="font-size:0.85rem">posts.js</code> 覆盖到 data 目录即可。或者先点「选择 data 文件夹」实现一键保存！
         </div>
 
         <button class="admin-new-post-btn" onclick="addNewPost()">＋ 添加新文章</button>
@@ -258,14 +258,29 @@
 
     function previewPost(idx) {
       const post = editingData.posts[idx];
+      if (!post || !post.content) {
+        showToast('文章内容为空，无法预览', 'error');
+        return;
+      }
       const w = window.open('', '_blank');
-      w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>预览 - ${post.title}</title>
-        <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"><\/script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"><\/script>
-        <style>body{font-family:system-ui,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem;line-height:1.8;color:#1e293b}pre{background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto}code{font-family:monospace}img{max-width:100%}h2{border-bottom:1px solid #e2e8f0;padding-bottom:.5rem}<\/style></head>
-        <body><article>${marked.parse(post.content)}<\/article>
-        <script>document.querySelectorAll('pre code').forEach(b=>hljs.highlightElement(b))<\/script>
+      if (!w) {
+        showToast('浏览器阻止了弹出窗口，请允许弹出', 'error');
+        return;
+      }
+      w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>预览 - ${escapeAttr(post.title)}</title>
+        <script src="lib/marked.min.js"><\/script>
+        <link rel="stylesheet" href="lib/github.min.css">
+        <script src="lib/highlight.min.js"><\/script>
+        <style>body{font-family:system-ui,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem;line-height:1.8;color:var(--text,#1e293b);background:var(--bg,#fff)}pre{background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto}code{font-family:monospace}img{max-width:100%}h2{border-bottom:1px solid #e2e8f0;padding-bottom:.5rem}<\/style></head>
+        <body><article id="content">加载中...</article>
+        <script>
+          try {
+            document.getElementById('content').innerHTML = marked.parse(${JSON.stringify(post.content)});
+            document.querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
+          } catch(e) {
+            document.getElementById('content').innerHTML = '<p style="color:red">预览渲染失败: ' + e.message + '</p><pre>' + ${JSON.stringify(post.content)} + '</pre>';
+          }
+        <\/script>
         </body></html>`);
       w.document.close();
     }
@@ -282,7 +297,6 @@
         dataDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
         document.getElementById('set-folder-btn').textContent = '✅ 已选择';
         document.getElementById('set-folder-btn').style.borderColor = 'var(--color-success)';
-        document.getElementById('save-btn').disabled = false;
         document.getElementById('admin-tip').innerHTML =
           '✅ 已绑定 <code style="font-size:0.85rem">' + dataDirHandle.name + '</code> 目录，现在点「保存更改」直接写入文件！';
         showToast('✅ 已选择文件夹，可以保存了！', 'success');
@@ -294,11 +308,45 @@
       }
     }
 
+    function setSavingState(state, msg) {
+      const btn = document.getElementById('save-btn');
+      if (!btn) return;
+      btn.disabled = true;
+      btn.style.cursor = 'default';
+      if (state === 'saving') {
+        btn.textContent = '⏳ 保存中...';
+        btn.style.background = '';
+        btn.style.color = '#fff';
+      } else if (state === 'success') {
+        btn.textContent = '✅ 已保存';
+        btn.style.background = 'var(--color-success)';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.textContent = '💾 保存更改';
+          btn.style.background = '';
+          btn.disabled = false;
+          btn.style.cursor = 'pointer';
+        }, 2000);
+      } else if (state === 'error') {
+        btn.textContent = '❌ 保存失败';
+        btn.style.background = 'var(--color-danger)';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.textContent = '💾 保存更改';
+          btn.style.background = '';
+          btn.disabled = false;
+          btn.style.cursor = 'pointer';
+        }, 2000);
+      }
+    }
+
     async function saveAll() {
+      setSavingState('saving');
       if (dataDirHandle) {
         await saveToFile(dataDirHandle);
       } else {
         fallbackSave();
+        setSavingState('success');
       }
     }
 
@@ -309,8 +357,10 @@
         const writable = await fileHandle.createWritable();
         await writable.write(content);
         await writable.close();
+        setSavingState('success');
         showToast('✅ 已直接保存到 ' + dirHandle.name + '\\posts.js！刷新首页即可看到变化', 'success');
       } catch (e) {
+        setSavingState('error');
         showToast('保存失败：' + e.message + '，使用下载方式', 'error');
         fallbackSave();
       }
@@ -323,12 +373,15 @@
     }
 
     function generatePostsJS() {
-      // Only save posts and skills/timeline, not trash
+      // Only save posts and skills/timeline/trash, not trash
       const saveData = {
         posts: editingData.posts,
         skills: BLOG_DATA.skills,
         timeline: BLOG_DATA.timeline
       };
+      if (BLOG_DATA._siteConfig) {
+        saveData._siteConfig = BLOG_DATA._siteConfig;
+      }
       const json = JSON.stringify(saveData, null, 2);
       return 'const BLOG_DATA = ' + json + ';\n';
     }

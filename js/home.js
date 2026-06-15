@@ -188,13 +188,7 @@ function initHeroChart() {
       textStyle: { color: 'var(--color-text)', fontSize: 12 }
     },
     radar: {
-      indicator: [
-        { name: 'C++', max: 100 },
-        { name: '算法', max: 100 },
-        { name: 'STL', max: 100 },
-        { name: '操作系统', max: 100 },
-        { name: '前端', max: 100 }
-      ],
+      indicator: skills.map(s => ({ name: s.label, max: 100 })),
       shape: 'circle',
       splitNumber: 4,
       axisName: {
@@ -220,7 +214,7 @@ function initHeroChart() {
     series: [{
       type: 'radar',
       data: [{
-        value: [skills.cpp, skills.algorithms, skills.stl, skills.os, skills.web],
+        value: skills.map(s => s.value),
         name: '技能',
         areaStyle: { color: 'rgba(99, 102, 241, 0.2)' },
         lineStyle: { color: '#6366f1', width: 2 },

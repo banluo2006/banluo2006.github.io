@@ -43,5 +43,21 @@ const BlogDB = {
 
   getTimeline() {
     return BLOG_DATA.timeline;
+  },
+
+  getBio() {
+    // Use custom bio from BLOG_DATA if available, otherwise fall back to SITE_CONFIG
+    if (BLOG_DATA._siteConfig) {
+      return {
+        author: BLOG_DATA._siteConfig.author || SITE_CONFIG.author,
+        subtitle: BLOG_DATA._siteConfig.subtitle || SITE_CONFIG.subtitle,
+        bio: BLOG_DATA._siteConfig.bio || SITE_CONFIG.bio
+      };
+    }
+    return {
+      author: SITE_CONFIG.author,
+      subtitle: SITE_CONFIG.subtitle,
+      bio: SITE_CONFIG.bio
+    };
   }
 };

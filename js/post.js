@@ -28,7 +28,6 @@ function renderPost(post) {
   // Meta
   document.getElementById('post-category').textContent = post.category;
   document.getElementById('post-date').textContent = formatDate(post.date);
-  document.getElementById('post-reading-time').textContent = `${post.readingTime} 分钟阅读`;
   document.getElementById('post-title').textContent = post.title;
 
   // Tags
