@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6366f1">
+  <title>文章 - ZSD's Blog</title>
+
+  <!-- Markdown & Highlight -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" id="hljs-theme">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/post.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+</head>
+<body>
+
+  <!-- Reading Progress -->
+  <div class="progress-bar" id="reading-progress"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <nav class="header-inner">
+      <a href="index.html" class="header-logo">
+        <span class="header-logo-icon">Z</span>
+        <span>ZSD's Blog</span>
+      </a>
+      <div class="header-nav">
+        <a href="index.html">首页</a>
+        <a href="about.html">关于</a>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <article class="post-page">
+      <div class="container">
+
+        <!-- Back -->
+        <a href="index.html" class="post-back">← 返回首页</a>
+
+        <!-- Post Header -->
+        <header class="post-header">
+          <span class="blog-card-category" id="post-category"></span>
+          <h1 class="post-title" id="post-title"></h1>
+          <div class="post-meta">
+            <span class="post-meta-item" id="post-date"></span>
+            <span class="post-meta-divider"></span>
+            <span class="post-meta-item" id="post-reading-time"></span>
+          </div>
+          <div class="post-tags" id="post-tags"></div>
+        </header>
+
+        <!-- Post Content -->
+        <div class="post-content">
+          <!-- Mobile TOC Toggle -->
+          <button class="mobile-toc-toggle">
+            <span>📑 目录</span>
+            <span class="toc-arrow">▸</span>
+          </button>
+          <div class="mobile-toc-content"></div>
+
+          <!-- TOC Sidebar -->
+          <aside class="post-toc-wrapper">
+            <div class="post-toc-title">📑 目录</div>
+            <ul class="post-toc-list"></ul>
+          </aside>
+
+          <!-- Post Body -->
+          <div class="post-body" id="post-body"></div>
+
+          <!-- Post Navigation -->
+          <nav class="post-nav">
+            <div id="post-nav-prev"></div>
+            <div id="post-nav-next"></div>
+          </nav>
+        </div>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-copyright">
+        &copy; 2026 ZSD's Blog. Built with ❤️
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:zsd20@example.com">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="back-to-top" aria-label="回到顶部">↑</button>
+
+  <!-- Scripts -->
+  <script src="data/site-config.js"></script>
+  <script src="data/posts.js"></script>
+  <script src="js/blog-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/post.js"></script>
+  <script>
+    initTheme();
+    initPost();
+  </script>
+</body>
+</html>

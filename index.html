@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="description" content="ZSD's Blog - 记录 C++ 学习之旅与技术思考">
+  <title>ZSD's Blog</title>
+
+  <!-- ECharts -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <nav class="header-inner">
+      <a href="index.html" class="header-logo">
+        <span class="header-logo-icon">Z</span>
+        <span>ZSD's Blog</span>
+      </a>
+      <div class="header-nav">
+        <a href="index.html" class="active">首页</a>
+        <a href="about.html">关于</a>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero-title">欢迎来到 ZSD's Blog</h1>
+        <p class="hero-subtitle">记录 C++ 学习之旅与技术思考</p>
+
+        <div class="hero-chart-wrapper">
+          <div id="hero-chart"></div>
+        </div>
+
+        <div class="tag-cloud" id="tag-cloud"></div>
+      </div>
+    </section>
+
+    <!-- Posts Section -->
+    <section class="posts-section">
+      <div class="container">
+        <div class="filter-bar" id="category-filter"></div>
+        <div class="posts-grid" id="posts-grid"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-copyright">
+        &copy; 2026 ZSD's Blog. Built with ❤️
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:zsd20@example.com">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到顶部">↑</button>
+
+  <!-- Scripts -->
+  <script src="data/site-config.js"></script>
+  <script src="data/posts.js"></script>
+  <script src="js/blog-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/home.js"></script>
+  <script>
+    initTheme();
+    initHome();
+  </script>
+</body>
+</html>

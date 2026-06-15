@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="description" content="关于 ZSD - C++ 学习者">
+  <title>关于 - ZSD's Blog</title>
+
+  <!-- ECharts -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/about.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <nav class="header-inner">
+      <a href="index.html" class="header-logo">
+        <span class="header-logo-icon">Z</span>
+        <span>ZSD's Blog</span>
+      </a>
+      <div class="header-nav">
+        <a href="index.html">首页</a>
+        <a href="about.html" class="active">关于</a>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="about-page">
+      <div class="container">
+
+        <!-- About Header -->
+        <header class="about-header">
+          <div class="about-avatar" id="about-avatar">Z</div>
+          <h1 class="about-name" id="about-name"></h1>
+          <p class="about-bio" id="about-bio"></p>
+        </header>
+
+        <!-- Skills Chart -->
+        <section>
+          <h2 class="section-title" style="text-align:center">🛠️ 技能分布</h2>
+          <p class="section-subtitle" style="text-align:center">持续学习中，不断成长</p>
+          <div class="about-chart-wrapper">
+            <div id="about-chart"></div>
+          </div>
+        </section>
+
+        <!-- Timeline -->
+        <section>
+          <h2 class="section-title" style="text-align:center">📅 学习历程</h2>
+          <p class="section-subtitle" style="text-align:center">每一步都算数</p>
+          <div class="timeline" id="timeline"></div>
+        </section>
+
+        <!-- Social Links -->
+        <div class="about-social">
+          <a href="https://github.com/" target="_blank" rel="noopener" title="GitHub">🐙</a>
+          <a href="mailto:zsd20@example.com" title="Email">✉️</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-copyright">
+        &copy; 2026 ZSD's Blog. Built with ❤️
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:zsd20@example.com">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data/site-config.js"></script>
+  <script src="data/posts.js"></script>
+  <script src="js/blog-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/about.js"></script>
+  <script>
+    initTheme();
+    initAbout();
+  </script>
+</body>
+</html>

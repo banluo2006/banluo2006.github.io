@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理后台 - ZSD's Blog</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <style>
+    .admin-page { padding: 2rem 0; }
+    .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .admin-title { font-size: 1.5rem; font-weight: 700; }
+    .admin-badge { font-size: 0.75rem; background: var(--color-primary); color: #fff; padding: 0.2rem 0.6rem; border-radius: var(--radius-full); }
+    .admin-btn { padding: 0.5rem 1rem; border-radius: var(--radius-sm); border: none; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all var(--transition-fast); }
+    .admin-btn-primary { background: var(--color-primary); color: #fff; }
+    .admin-btn-primary:hover { background: var(--color-primary-hover); }
+    .admin-btn-success { background: var(--color-success); color: #fff; }
+    .admin-btn-danger { background: var(--color-danger); color: #fff; }
+    .admin-btn-outline { background: transparent; border: 1px solid var(--color-border); color: var(--color-text-secondary); }
+    .admin-btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .admin-btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+    .admin-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; transition: all var(--transition-fast); }
+    .admin-card-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; cursor: pointer; user-select: none; }
+    .admin-card-header:hover { background: var(--color-bg-secondary); }
+    .admin-card-title { font-size: 1rem; font-weight: 600; }
+    .admin-card-meta { font-size: 0.8rem; color: var(--color-text-muted); display: flex; gap: 0.75rem; align-items: center; }
+    .admin-card-body { display: none; padding: 0 1.25rem 1.25rem; }
+    .admin-card-body.open { display: block; }
+    .admin-form-group { margin-bottom: 1rem; }
+    .admin-form-group label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.3rem; color: var(--color-text-secondary); }
+    .admin-form-group input,
+    .admin-form-group textarea,
+    .admin-form-group select { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); color: var(--color-text); font-size: 0.9rem; font-family: inherit; transition: border var(--transition-fast); }
+    .admin-form-group input:focus,
+    .admin-form-group textarea:focus,
+    .admin-form-group select:focus { outline: none; border-color: var(--color-primary); }
+    .admin-form-group textarea { min-height: 120px; resize: vertical; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; }
+    .admin-form-group .helper { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+    .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .admin-toast { position: fixed; bottom: 2rem; right: 2rem; padding: 0.75rem 1.25rem; border-radius: var(--radius-md); color: #fff; font-size: 0.9rem; z-index: 999; opacity: 0; transform: translateY(10px); transition: all var(--transition-normal); pointer-events: none; }
+    .admin-toast.show { opacity: 1; transform: translateY(0); }
+    .admin-toast.success { background: var(--color-success); }
+    .admin-toast.error { background: var(--color-danger); }
+    .admin-new-post-btn { width: 100%; padding: 1rem; border: 2px dashed var(--color-border); border-radius: var(--radius-lg); background: transparent; color: var(--color-text-secondary); cursor: pointer; font-size: 0.95rem; transition: all var(--transition-fast); margin-bottom: 1.5rem; }
+    .admin-new-post-btn:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-bg); }
+    .admin-tip { background: var(--color-primary-light); border: 1px solid var(--color-primary); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 0.9rem; color: var(--color-primary); display: flex; align-items: center; gap: 0.5rem; }
+    .admin-preview-btn { position: fixed; bottom: 2rem; left: 2rem; width: 44px; height: 44px; border-radius: var(--radius-full); background: var(--color-card); border: 1px solid var(--color-border); color: var(--color-text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; box-shadow: var(--shadow-md); z-index: 50; text-decoration: none; transition: all var(--transition-fast); }
+    .admin-preview-btn:hover { color: var(--color-primary); border-color: var(--color-primary); transform: translateY(-2px); }
+    @media (max-width: 640px) { .admin-header { flex-direction: column; align-items: flex-start; } }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <nav class="header-inner">
+      <a href="index.html" class="header-logo">
+        <span class="header-logo-icon">Z</span>
+        <span>ZSD's Blog</span>
+      </a>
+      <div class="header-nav">
+        <a href="index.html">首页</a>
+        <a href="about.html">关于</a>
+        <a href="admin.html" class="active">管理</a>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main">
+    <div class="admin-page">
+      <div class="container">
+        <div class="admin-header">
+          <div>
+            <h1 class="admin-title">📝 管理后台</h1>
+            <p style="color:var(--color-text-muted);font-size:0.875rem;">在浏览器中编辑并直接保存到文件</p>
+          </div>
+          <div class="admin-actions">
+            <button class="admin-btn admin-btn-outline" id="set-folder-btn" onclick="setDataFolder()">📂 选择 data 文件夹</button>
+            <button class="admin-btn admin-btn-primary" id="save-btn" onclick="saveAll()" disabled>💾 保存更改</button>
+          </div>
+        </div>
+
+        <div class="admin-tip" id="admin-tip">
+          ⚡ 先点击「选择 data 文件夹」，选中 <code style="font-size:0.85rem">blog\data</code> 目录 → 之后点「保存更改」直接写入文件！
+        </div>
+
+        <button class="admin-new-post-btn" onclick="addNewPost()">＋ 添加新文章</button>
+
+        <div id="posts-list"></div>
+      </div>
+    </div>
+  </main>
+
+  <a href="index.html" class="admin-preview-btn" title="查看首页">🏠</a>
+
+  <div class="admin-toast" id="admin-toast"></div>
+
+  <script src="data/site-config.js"></script>
+  <script src="data/posts.js"></script>
+  <script src="js/blog-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    let editingData = JSON.parse(JSON.stringify(BLOG_DATA));
+
+    function renderPosts() {
+      const container = document.getElementById('posts-list');
+      container.innerHTML = editingData.posts.map((post, idx) => `
+        <div class="admin-card">
+          <div class="admin-card-header" onclick="toggleCard(this)">
+            <div>
+              <div class="admin-card-title">${post.title}</div>
+              <div class="admin-card-meta">
+                <span>${post.category}</span>
+                <span>${post.date}</span>
+                <span>${post.readingTime}分钟</span>
+                <span>${post.tags.join(', ')}</span>
+              </div>
+            </div>
+            <span style="color:var(--color-text-muted)">▸</span>
+          </div>
+          <div class="admin-card-body">
+            <div class="admin-form-group">
+              <label>文章 ID（唯一标识）</label>
+              <input type="text" value="${post.id}" onchange="updatePost(${idx},'id',this.value)" placeholder="例: my-new-post">
+              <div class="helper">修改后首页链接会变，建议不修改</div>
+            </div>
+            <div class="admin-form-group">
+              <label>标题</label>
+              <input type="text" value="${escapeAttr(post.title)}" onchange="updatePost(${idx},'title',this.value)">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+              <div class="admin-form-group">
+                <label>分类</label>
+                <select onchange="updatePost(${idx},'category',this.value)">
+                  ${['C++','算法','系统','经验'].map(c =>
+                    `<option value="${c}" ${c === post.category ? 'selected' : ''}>${c}</option>`
+                  ).join('')}
+                </select>
+              </div>
+              <div class="admin-form-group">
+                <label>日期</label>
+                <input type="date" value="${post.date}" onchange="updatePost(${idx},'date',this.value)">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label>标签（用英文逗号分隔）</label>
+              <input type="text" value="${post.tags.join(', ')}" onchange="updatePost(${idx},'tags',this.value.split(',').map(t=>t.trim()))">
+            </div>
+            <div class="admin-form-group">
+              <label>简介</label>
+              <textarea rows="2" onchange="updatePost(${idx},'summary',this.value)">${escapeAttr(post.summary)}</textarea>
+            </div>
+            <div class="admin-form-group">
+              <label>阅读时间（分钟）</label>
+              <input type="number" value="${post.readingTime}" onchange="updatePost(${idx},'readingTime',parseInt(this.value)||1)" min="1" max="999">
+            </div>
+            <div class="admin-form-group">
+              <label>正文（Markdown 格式）</label>
+              <textarea rows="12" onchange="updatePost(${idx},'content',this.value)" style="font-family:var(--font-mono);font-size:0.85rem">${escapeAttr(post.content)}</textarea>
+              <div class="helper">支持 Markdown 语法：标题 #、代码块 \`\`\`cpp、列表 -、加粗 **文字**</div>
+            </div>
+            <div class="admin-actions">
+              <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="previewPost(${idx})">👁️ 预览</button>
+              <button class="admin-btn admin-btn-danger admin-btn-sm" onclick="deletePost(${idx})">🗑️ 删除</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleCard(header) {
+      const body = header.nextElementSibling;
+      const arrow = header.querySelector('span:last-child');
+      body.classList.toggle('open');
+      arrow.textContent = body.classList.contains('open') ? '▾' : '▸';
+    }
+
+    function updatePost(idx, field, value) {
+      editingData.posts[idx][field] = value;
+    }
+
+    function addNewPost() {
+      const now = new Date().toISOString().slice(0, 10);
+      editingData.posts.unshift({
+        id: 'new-post-' + Date.now(),
+        title: '新文章',
+        date: now,
+        category: 'C++',
+        tags: ['新手'],
+        summary: '文章简介',
+        readingTime: 5,
+        content: '# 新文章\n\n在这里写正文...'
+      });
+      renderPosts();
+      showToast('已添加新文章，请填写内容', 'success');
+    }
+
+    function deletePost(idx) {
+      if (!confirm(`确定删除「${editingData.posts[idx].title}」吗？`)) return;
+      editingData.posts.splice(idx, 1);
+      renderPosts();
+      showToast('已删除', 'success');
+    }
+
+    function previewPost(idx) {
+      const post = editingData.posts[idx];
+      const w = window.open('', '_blank');
+      w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>预览 - ${post.title}</title>
+        <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"><\/script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"><\/script>
+        <style>body{font-family:system-ui,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem;line-height:1.8;color:#1e293b}pre{background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto}code{font-family:monospace}img{max-width:100%}h2{border-bottom:1px solid #e2e8f0;padding-bottom:.5rem}<\/style></head>
+        <body><article>${marked.parse(post.content)}<\/article>
+        <script>document.querySelectorAll('pre code').forEach(b=>hljs.highlightElement(b))<\/script>
+        </body></html>`);
+      w.document.close();
+    }
+
+    let dataDirHandle = null;
+
+    async function setDataFolder() {
+      try {
+        if (!window.showDirectoryPicker) {
+          showToast('您的浏览器不支持直接保存，将使用下载方式', 'error');
+          fallbackSave();
+          return;
+        }
+        dataDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        document.getElementById('set-folder-btn').textContent = '✅ 已选择';
+        document.getElementById('set-folder-btn').style.borderColor = 'var(--color-success)';
+        document.getElementById('save-btn').disabled = false;
+        document.getElementById('admin-tip').innerHTML =
+          '✅ 已绑定 <code style="font-size:0.85rem">' + dataDirHandle.name + '</code> 目录，现在点「保存更改」直接写入文件！';
+        showToast('✅ 已选择文件夹，可以保存了！', 'success');
+      } catch (e) {
+        if (e.name !== 'AbortError') {
+          showToast('选择文件夹失败：' + e.message, 'error');
+          fallbackSave();
+        }
+      }
+    }
+
+    async function saveAll() {
+      if (dataDirHandle) {
+        await saveToFile(dataDirHandle);
+      } else {
+        fallbackSave();
+      }
+    }
+
+    async function saveToFile(dirHandle) {
+      try {
+        const content = generatePostsJS();
+        const fileHandle = await dirHandle.getFileHandle('posts.js', { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(content);
+        await writable.close();
+        showToast('✅ 已直接保存到 ' + dirHandle.name + '\\posts.js！刷新首页即可看到变化', 'success');
+      } catch (e) {
+        showToast('保存失败：' + e.message + '，使用下载方式', 'error');
+        fallbackSave();
+      }
+    }
+
+    function fallbackSave() {
+      const content = generatePostsJS();
+      downloadTextFile(content, 'posts.js');
+      showToast('📥 文件已下载，请覆盖到 D:\\deepseek\\blog\\data\\posts.js', 'success');
+    }
+
+    function generatePostsJS() {
+      const json = JSON.stringify(editingData, null, 2);
+      return 'const BLOG_DATA = ' + json + ';\n';
+    }
+
+    function downloadTextFile(content, filename) {
+      const blob = new Blob([content], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function showToast(msg, type) {
+      const toast = document.getElementById('admin-toast');
+      toast.textContent = msg;
+      toast.className = 'admin-toast ' + type + ' show';
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function escapeAttr(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    initTheme();
+    renderPosts();
+  </script>
+</body>
+</html>
