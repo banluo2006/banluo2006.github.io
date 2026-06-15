@@ -44,7 +44,8 @@
   <main class="main">
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="hero-section">
+      <canvas id="particle-canvas"></canvas>
       <div class="container">
         <h1 class="hero-title">欢迎来到 ZSD's Blog</h1>
         <p class="hero-subtitle">记录 C++ 学习之旅与技术思考</p>
@@ -89,10 +90,12 @@
   <script src="js/blog-data.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/home.js"></script>
+  <script src="js/particles.js"></script>
   <script>
     initTheme();
     initColorScheme();
     initHome();
+    initParticles();
   </script>
 </body>
 </html>
