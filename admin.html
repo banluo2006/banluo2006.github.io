@@ -64,7 +64,6 @@
       <div class="header-nav">
         <a href="index.html">首页</a>
         <a href="about.html">关于</a>
-        <a href="admin.html" class="active">管理</a>
       </div>
       <div class="header-actions">
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌙</button>
@@ -92,7 +91,30 @@
 
         <button class="admin-new-post-btn" onclick="addNewPost()">＋ 添加新文章</button>
 
+        <!-- Batch Actions -->
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;cursor:pointer;color:var(--color-text-secondary)">
+            <input type="checkbox" id="select-all" onchange="toggleSelectAll(this.checked)" style="width:16px;height:16px;cursor:pointer">
+            全选
+          </label>
+          <span id="selected-count" style="font-size:0.8rem;color:var(--color-text-muted)">已选 0 篇</span>
+          <button class="admin-btn admin-btn-danger admin-btn-sm" id="batch-delete-btn" onclick="batchDelete()" style="display:none">🗑️ 批量删除</button>
+        </div>
+
         <div id="posts-list"></div>
+
+        <!-- Trash Section -->
+        <div style="margin-top:2rem;border-top:1px solid var(--color-border);padding-top:1.5rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem">
+            <div>
+              <span style="font-size:1rem;font-weight:600">🗑️ 回收站</span>
+              <span id="trash-count" style="font-size:0.8rem;color:var(--color-text-muted);margin-left:0.5rem">(0 篇)</span>
+            </div>
+            <button class="admin-btn admin-btn-danger admin-btn-sm" id="empty-trash-btn" onclick="emptyTrash()" style="display:none">🗑️ 清空回收站</button>
+          </div>
+          <div id="trash-list"></div>
+        </div>
+
       </div>
     </div>
   </main>
@@ -107,19 +129,25 @@
   <script src="js/theme.js"></script>
   <script>
     let editingData = JSON.parse(JSON.stringify(BLOG_DATA));
+    if (!editingData.trash) editingData.trash = [];
 
     function renderPosts() {
       const container = document.getElementById('posts-list');
       container.innerHTML = editingData.posts.map((post, idx) => `
-        <div class="admin-card">
+        <div class="admin-card" data-index="${idx}">
           <div class="admin-card-header" onclick="toggleCard(this)">
-            <div>
-              <div class="admin-card-title">${post.title}</div>
-              <div class="admin-card-meta">
-                <span>${post.category}</span>
-                <span>${post.date}</span>
-                <span>${post.readingTime}分钟</span>
-                <span>${post.tags.join(', ')}</span>
+            <div style="display:flex;align-items:center;gap:0.5rem">
+              <input type="checkbox" class="post-checkbox" data-index="${idx}"
+                     onclick="event.stopPropagation();toggleSelect(this)"
+                     style="width:16px;height:16px;cursor:pointer;flex-shrink:0">
+              <div>
+                <div class="admin-card-title">${post.title}</div>
+                <div class="admin-card-meta">
+                  <span>${post.category}</span>
+                  <span>${post.date}</span>
+                  <span>${post.readingTime}分钟</span>
+                  <span>${post.tags.join(', ')}</span>
+                </div>
               </div>
             </div>
             <span style="color:var(--color-text-muted)">▸</span>
@@ -202,10 +230,13 @@
     }
 
     function deletePost(idx) {
-      if (!confirm(`确定删除「${editingData.posts[idx].title}」吗？`)) return;
+      const post = editingData.posts[idx];
+      if (!confirm(`确定将「${post.title}」移到回收站吗？`)) return;
+      editingData.trash.push({ ...post, deletedAt: new Date().toISOString() });
       editingData.posts.splice(idx, 1);
       renderPosts();
-      showToast('已删除', 'success');
+      renderTrash();
+      showToast('已移到回收站', 'success');
     }
 
     function previewPost(idx) {
@@ -275,7 +306,13 @@
     }
 
     function generatePostsJS() {
-      const json = JSON.stringify(editingData, null, 2);
+      // Only save posts and skills/timeline, not trash
+      const saveData = {
+        posts: editingData.posts,
+        skills: BLOG_DATA.skills,
+        timeline: BLOG_DATA.timeline
+      };
+      const json = JSON.stringify(saveData, null, 2);
       return 'const BLOG_DATA = ' + json + ';\n';
     }
 
@@ -303,9 +340,117 @@
         .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
 
+    // ===== Trash =====
+    function renderTrash() {
+      const container = document.getElementById('trash-list');
+      const countEl = document.getElementById('trash-count');
+      const emptyBtn = document.getElementById('empty-trash-btn');
+      if (!container) return;
+
+      countEl.textContent = `(${editingData.trash.length} 篇)`;
+      emptyBtn.style.display = editingData.trash.length > 0 ? 'inline-flex' : 'none';
+
+      if (!editingData.trash.length) {
+        container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--color-text-muted);font-size:0.85rem">回收站为空</div>';
+        return;
+      }
+
+      container.innerHTML = editingData.trash.map((post, idx) => `
+        <div class="admin-card" style="opacity:0.7">
+          <div class="admin-card-header" style="cursor:default">
+            <div>
+              <div class="admin-card-title">${post.title}</div>
+              <div class="admin-card-meta">
+                <span>${post.category}</span>
+                <span>${post.date}</span>
+                <span>${post.deletedAt ? '删除于 ' + post.deletedAt.slice(0,10) : ''}</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:0.3rem">
+              <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="restorePost(${idx})">↩️ 还原</button>
+              <button class="admin-btn admin-btn-danger admin-btn-sm" onclick="permanentDelete(${idx})">🗑️ 永久删除</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function restorePost(idx) {
+      const post = editingData.trash.splice(idx, 1)[0];
+      delete post.deletedAt;
+      editingData.posts.unshift(post);
+      renderPosts();
+      renderTrash();
+      showToast('已还原', 'success');
+    }
+
+    function permanentDelete(idx) {
+      if (!confirm(`确定永久删除「${editingData.trash[idx].title}」吗？不可恢复！`)) return;
+      editingData.trash.splice(idx, 1);
+      renderTrash();
+      showToast('已永久删除', 'success');
+    }
+
+    function emptyTrash() {
+      if (!confirm(`确定清空回收站中的 ${editingData.trash.length} 篇文章吗？不可恢复！`)) return;
+      editingData.trash = [];
+      renderTrash();
+      showToast('回收站已清空', 'success');
+    }
+
+    // ===== Batch Operations =====
+    let selectedSet = new Set();
+
+    function toggleSelectAll(checked) {
+      document.querySelectorAll('.post-checkbox').forEach(cb => {
+        cb.checked = checked;
+        if (checked) selectedSet.add(cb.dataset.index);
+        else selectedSet.delete(cb.dataset.index);
+      });
+      updateBatchUI();
+    }
+
+    function toggleSelect(cb) {
+      const idx = cb.dataset.index;
+      if (cb.checked) selectedSet.add(idx);
+      else selectedSet.delete(idx);
+      // Update select-all state
+      const all = document.querySelectorAll('.post-checkbox');
+      const checked = document.querySelectorAll('.post-checkbox:checked');
+      document.getElementById('select-all').checked = all.length === checked.length;
+      updateBatchUI();
+    }
+
+    function updateBatchUI() {
+      const count = selectedSet.size;
+      document.getElementById('selected-count').textContent = `已选 ${count} 篇`;
+      document.getElementById('batch-delete-btn').style.display = count > 0 ? 'inline-flex' : 'none';
+    }
+
+    function batchDelete() {
+      const count = selectedSet.size;
+      if (count === 0) return;
+      if (!confirm(`确定将选中的 ${count} 篇文章移到回收站吗？`)) return;
+
+      const indices = [...selectedSet].map(Number).sort((a,b) => b - a);
+      indices.forEach(idx => {
+        const post = editingData.posts[idx];
+        editingData.trash.push({ ...post, deletedAt: new Date().toISOString() });
+      });
+      indices.forEach(idx => editingData.posts.splice(idx, 1));
+      selectedSet.clear();
+
+      renderPosts();
+      renderTrash();
+      updateBatchUI();
+      document.getElementById('select-all').checked = false;
+      showToast(`已移动 ${count} 篇到回收站`, 'success');
+    }
+
     initTheme();
     initColorScheme();
     renderPosts();
+    renderTrash();
   </script>
 </body>
 </html>

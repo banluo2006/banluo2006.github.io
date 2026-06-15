@@ -101,6 +101,19 @@
   position: relative;
 }
 
+/* Code language label */
+.code-lang-label {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-sans);
+}
+
 /* Code copy button */
 .code-copy-btn {
   position: absolute;

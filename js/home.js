@@ -7,6 +7,33 @@ function initHome() {
   initHeroChart();
   initFilterEvents();
   initCardAnimations();
+  initTypewriter();
+}
+
+function initTypewriter() {
+  const el = document.querySelector('.hero-subtitle');
+  if (!el) return;
+  const text = el.textContent;
+  // Fix height to prevent layout shift when clearing text
+  el.style.minHeight = el.offsetHeight + 'px';
+  el.textContent = '';
+
+  let i = 0;
+  const cursor = document.createElement('span');
+  cursor.className = 'typewriter-cursor';
+  cursor.textContent = '|';
+  el.after(cursor);
+
+  function type() {
+    if (i < text.length) {
+      el.textContent += text[i];
+      i++;
+      setTimeout(type, 50 + Math.random() * 40);
+    } else {
+      cursor.style.animation = 'blink 0.8s step-end infinite';
+    }
+  }
+  setTimeout(type, 500);
 }
 
 function renderCategories() {
@@ -46,6 +73,9 @@ function renderPosts(posts) {
   grid.innerHTML = posts.map((post, index) => `
     <article class="blog-card" style="animation-delay: ${index * 0.08}s"
              onclick="location.href='post.html?id=${post.id}'">
+      <div class="blog-card-cover" style="background:linear-gradient(135deg, ${getCardColor(post.category)})">
+        <span>${post.title}</span>
+      </div>
       <div class="blog-card-body">
         <span class="blog-card-category">${post.category}</span>
         <h2 class="blog-card-title">${post.title}</h2>
@@ -68,6 +98,16 @@ function formatDate(dateStr) {
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${y}-${m}-${day}`;
+}
+
+function getCardColor(category) {
+  const colors = {
+    'C++': '#6366f1, #8b5cf6',
+    '算法': '#10b981, #059669',
+    '系统': '#3b82f6, #06b6d4',
+    '经验': '#f97316, #f59e0b',
+  };
+  return colors[category] || '#6366f1, #8b5cf6';
 }
 
 function initFilterEvents() {

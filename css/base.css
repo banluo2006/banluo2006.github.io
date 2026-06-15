@@ -32,6 +32,19 @@ a:hover {
   color: var(--color-primary-hover);
 }
 
+/* Decent link underline animation */
+a:not(.header-logo):not(.blog-card):not(.post-nav-item):not(.tag):not(.filter-btn) {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size var(--transition-normal), color var(--transition-fast);
+}
+
+a:not(.header-logo):not(.blog-card):not(.post-nav-item):not(.tag):not(.filter-btn):hover {
+  background-size: 100% 1px;
+}
+
 img {
   max-width: 100%;
   height: auto;

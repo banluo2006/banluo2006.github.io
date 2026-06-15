@@ -8,7 +8,7 @@
   <title>关于 - ZSD's Blog</title>
 
   <!-- ECharts -->
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script src="lib/echarts.min.js"></script>
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/variables.css">
@@ -18,7 +18,6 @@
   <link rel="stylesheet" href="css/about.css">
   <link rel="stylesheet" href="css/responsive.css">
 
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
 </head>
 <body>
 
@@ -42,36 +41,45 @@
   <!-- Main -->
   <main class="main">
     <div class="about-page">
+
+      <!-- Hero Section -->
+      <section class="hero" id="hero-section" style="min-height:380px;background:linear-gradient(135deg, var(--color-primary-bg) 0%, transparent 50%, var(--color-primary-bg) 100%)">
+        <div class="container">
+          <div class="about-avatar" id="about-avatar">Z</div>
+          <h1 class="hero-title" id="about-name" style="font-size:2rem;margin-bottom:0.5rem"></h1>
+          <p class="hero-subtitle" id="about-bio" style="max-width:600px"></p>
+        </div>
+      </section>
+
       <div class="container">
 
-        <!-- About Header -->
-        <header class="about-header">
-          <div class="about-avatar" id="about-avatar">Z</div>
-          <h1 class="about-name" id="about-name"></h1>
-          <p class="about-bio" id="about-bio"></p>
-        </header>
-
         <!-- Skills Chart -->
-        <section>
+        <section class="about-section">
           <h2 class="section-title" style="text-align:center">🛠️ 技能分布</h2>
           <p class="section-subtitle" style="text-align:center">持续学习中，不断成长</p>
-          <div class="about-chart-wrapper">
-            <div id="about-chart"></div>
+          <div class="about-section-card">
+            <div class="about-chart-wrapper">
+              <div id="about-chart"></div>
+            </div>
           </div>
         </section>
 
         <!-- Timeline -->
-        <section>
+        <section class="about-section">
           <h2 class="section-title" style="text-align:center">📅 学习历程</h2>
           <p class="section-subtitle" style="text-align:center">每一步都算数</p>
-          <div class="timeline" id="timeline"></div>
+          <div class="about-section-card">
+            <div class="timeline" id="timeline"></div>
+          </div>
         </section>
 
         <!-- Social Links -->
-        <div class="about-social">
-          <a href="https://github.com/banluo2006" target="_blank" rel="noopener" title="GitHub">🐙</a>
-          <a href="mailto:3112371653@qq.com" title="Email">✉️</a>
-        </div>
+        <section class="about-section">
+          <div class="about-social">
+            <a href="https://github.com/banluo2006" target="_blank" rel="noopener" title="GitHub">🐙 github.com/banluo2006</a>
+            <a href="javascript:void(0)" onclick="copyEmail()" title="点击复制邮箱">✉️ 3112371653@qq.com</a>
+          </div>
+        </section>
 
       </div>
     </div>
@@ -79,13 +87,18 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-copyright">
-        &copy; 2026 ZSD's Blog. Built with ❤️
+    <div class="footer-inner" style="flex-direction:column;gap:0.5rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;flex-wrap:wrap;gap:1rem">
+        <div class="footer-copyright">
+          &copy; 2026 ZSD's Blog. Built with ❤️
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/banluo2006" target="_blank" rel="noopener">github.com/banluo2006</a>
+          <a href="javascript:void(0)" data-email="true" onclick="copyEmail()" title="点击复制邮箱">3112371653@qq.com</a>
+        </div>
       </div>
-      <div class="footer-links">
-        <a href="https://github.com/banluo2006" target="_blank" rel="noopener">GitHub</a>
-        <a href="mailto:3112371653@qq.com">Email</a>
+      <div style="font-size:0.75rem;color:var(--color-text-muted);text-align:center;width:100%;border-top:1px solid rgba(255,255,255,0.08);padding-top:0.75rem;line-height:1.6">
+        免责声明：本博客所有内容仅供个人学习参考，不构成任何建议。转载文章请联系作者获取授权。
       </div>
     </div>
   </footer>
@@ -100,6 +113,16 @@
     initTheme();
     initColorScheme();
     initAbout();
+
+    function copyEmail() {
+      const addr = '3112371653@qq.com';
+      navigator.clipboard.writeText(addr).then(() => {
+        const btn = document.querySelector('a[onclick*="copyEmail"]');
+        const orig = btn.textContent;
+        btn.textContent = '✅ 已复制';
+        setTimeout(() => btn.textContent = orig, 2000);
+      });
+    }
   </script>
 </body>
 </html>

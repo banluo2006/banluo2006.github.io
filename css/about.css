@@ -1,51 +1,50 @@
 /* ===== About Page ===== */
 
 .about-page {
-  padding: 3rem 0;
+  padding: 0;
 }
 
-.about-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
+/* ---- About Hero Avatar (inside hero section) ---- */
 .about-avatar {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: var(--radius-full);
   margin: 0 auto 1.5rem;
   background: linear-gradient(135deg, var(--color-primary), #a78bfa);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  font-size: 2.5rem;
   color: #fff;
   box-shadow: 0 0 0 4px var(--color-card), 0 0 0 5px var(--color-border);
+  position: relative;
+  z-index: 1;
 }
 
-.about-name {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+/* ---- Section Cards ---- */
+.about-section {
+  padding: 2rem 0;
 }
 
-.about-bio {
-  max-width: 500px;
+.about-section-card {
+  max-width: 600px;
   margin: 0 auto;
-  color: var(--color-text-secondary);
-  font-size: 1rem;
-  line-height: 1.7;
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: 2rem;
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-normal);
+}
+
+.about-section-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary);
 }
 
 /* ---- Skills Chart ---- */
 .about-chart-wrapper {
-  max-width: 500px;
-  margin: 0 auto 3rem;
-  padding: 1.5rem;
-  background: var(--color-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-card);
+  padding: 1rem;
 }
 
 #about-chart {
@@ -55,8 +54,6 @@
 
 /* ---- Timeline ---- */
 .timeline {
-  max-width: 600px;
-  margin: 0 auto;
   position: relative;
   padding-left: 2rem;
 }
@@ -115,33 +112,72 @@
 .about-social {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 2.5rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .about-social a {
-  width: 44px;
-  height: 44px;
+  padding: 0.5rem 1.25rem;
   border-radius: var(--radius-full);
   border: 1px solid var(--color-border);
   background: var(--color-card);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
+  gap: 0.4rem;
+  font-size: 0.85rem;
   text-decoration: none;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .about-social a:hover {
   color: #fff;
   background: var(--color-primary);
   border-color: var(--color-primary);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+/* ---- Background blobs ---- */
+.about-page {
+  position: relative;
+}
+
+.about-page::before {
+  content: '';
+  position: absolute;
+  top: 200px;
+  right: -150px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--color-primary-bg) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.about-page::after {
+  content: '';
+  position: absolute;
+  bottom: 200px;
+  left: -150px;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, var(--color-primary-bg) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.about-page .container {
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 640px) {
+  .about-hero {
+    padding: 2.5rem 0 2rem;
+  }
+
   .about-name {
     font-size: 1.5rem;
   }
@@ -150,5 +186,9 @@
     width: 100px;
     height: 100px;
     font-size: 2.5rem;
+  }
+
+  .about-section-card {
+    padding: 1.25rem;
   }
 }

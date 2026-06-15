@@ -79,14 +79,24 @@ function escapeHtml(text) {
 
 function addCopyButtons(container) {
   container.querySelectorAll('pre').forEach(pre => {
+    const code = pre.querySelector('code');
+    if (!code) return;
+
+    // Add language label
+    const langMatch = code.className.match(/language-(\w+)/);
+    if (langMatch) {
+      const langLabel = document.createElement('span');
+      langLabel.className = 'code-lang-label';
+      langLabel.textContent = langMatch[1];
+      pre.appendChild(langLabel);
+    }
+
+    // Add copy button
     const btn = document.createElement('button');
     btn.className = 'code-copy-btn';
     btn.textContent = '📋 复制';
 
     btn.addEventListener('click', () => {
-      const code = pre.querySelector('code');
-      if (!code) return;
-
       navigator.clipboard.writeText(code.textContent).then(() => {
         btn.textContent = '✅ 已复制';
         btn.classList.add('copied');

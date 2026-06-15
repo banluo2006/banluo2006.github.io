@@ -1,3 +1,39 @@
+// ===== Shared Storage =====
+// localStorage works on GitHub Pages (same domain).
+// window.name works locally for same-tab navigation across file:// pages.
+
+function getStorage(key, defaultVal) {
+  // 1. Try localStorage (GitHub Pages)
+  try {
+    const val = localStorage.getItem(key);
+    if (val !== null) return val;
+  } catch(e) {}
+  // 2. Try window.name (file:// same-tab navigation)
+  try {
+    const data = JSON.parse(window.name || '{}');
+    if (data[key] !== undefined) return data[key];
+  } catch(e) {}
+  return defaultVal;
+}
+
+function setStorage(key, value) {
+  try { localStorage.setItem(key, value); } catch(e) {}
+  try {
+    const data = JSON.parse(window.name || '{}');
+    data[key] = value;
+    window.name = JSON.stringify(data);
+  } catch(e) {}
+}
+
+function removeStorage(key) {
+  try { localStorage.removeItem(key); } catch(e) {}
+  try {
+    const data = JSON.parse(window.name || '{}');
+    delete data[key];
+    window.name = JSON.stringify(data);
+  } catch(e) {}
+}
+
 // ===== Theme & Color Scheme Management =====
 
 const COLOR_SCHEMES = [
@@ -13,7 +49,7 @@ const COLOR_SCHEMES = [
 // ===== Theme =====
 
 function initTheme() {
-  const saved = localStorage.getItem('blog-theme');
+  const saved = getStorage('blog-theme');
   if (saved) {
     document.documentElement.setAttribute('data-theme', saved);
   } else {
@@ -27,7 +63,7 @@ function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('blog-theme', next);
+  setStorage('blog-theme', next);
   updateThemeIcon();
   window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
 }
@@ -42,10 +78,8 @@ function updateThemeIcon() {
 // ===== Color Scheme =====
 
 function initColorScheme() {
-  // Inject palette into header
   injectPalette();
-
-  const saved = localStorage.getItem('blog-color');
+  const saved = getStorage('blog-color');
   if (saved && COLOR_SCHEMES.some(s => s.id === saved)) {
     setColorScheme(saved, false);
   }
@@ -59,8 +93,7 @@ function injectPalette() {
   palette.className = 'color-palette';
   palette.title = '切换配色';
 
-  // Current scheme
-  const current = localStorage.getItem('blog-color') || 'indigo';
+  const current = getStorage('blog-color') || 'indigo';
 
   palette.innerHTML = COLOR_SCHEMES.map(s => `
     <button class="color-dot ${s.id === current ? 'active' : ''}"
@@ -70,20 +103,18 @@ function injectPalette() {
             title="${s.label}"></button>
   `).join('');
 
-  // Insert before theme toggle
   container.insertBefore(palette, container.firstChild);
 }
 
 function setColorScheme(schemeId, save = true) {
   if (!schemeId || schemeId === 'indigo') {
     document.documentElement.removeAttribute('data-color');
-    if (save) localStorage.removeItem('blog-color');
+    if (save) removeStorage('blog-color');
   } else {
     document.documentElement.setAttribute('data-color', schemeId);
-    if (save) localStorage.setItem('blog-color', schemeId);
+    if (save) setStorage('blog-color', schemeId);
   }
 
-  // Update active state on dots
   document.querySelectorAll('.color-dot').forEach(dot => {
     dot.classList.toggle('active', dot.dataset.color === schemeId);
   });
@@ -91,4 +122,22 @@ function setColorScheme(schemeId, save = true) {
   if (save) {
     window.dispatchEvent(new CustomEvent('themechange', { detail: { color: schemeId } }));
   }
+}
+
+// ===== Copy Email =====
+function copyEmail(email) {
+  const addr = email || '3112371653@qq.com';
+  navigator.clipboard.writeText(addr).then(() => {
+    document.querySelectorAll('[data-email]').forEach(el => {
+      const orig = el.textContent;
+      el.textContent = '✅ 已复制';
+      el.style.color = 'var(--color-success)';
+      setTimeout(() => {
+        el.textContent = orig;
+        el.style.color = '';
+      }, 2000);
+    });
+  }).catch(() => {
+    alert('📧 邮箱: ' + addr);
+  });
 }

@@ -7,9 +7,9 @@
   <title>文章 - ZSD's Blog</title>
 
   <!-- Markdown & Highlight -->
-  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" id="hljs-theme">
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+  <script src="lib/marked.min.js"></script>
+  <link rel="stylesheet" href="lib/github.min.css" id="hljs-theme">
+  <script src="lib/highlight.min.js"></script>
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/variables.css">
@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="css/post.css">
   <link rel="stylesheet" href="css/responsive.css">
 
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
 </head>
 <body>
 
@@ -94,13 +93,18 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-copyright">
-        &copy; 2026 ZSD's Blog. Built with ❤️
+    <div class="footer-inner" style="flex-direction:column;gap:0.5rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;flex-wrap:wrap;gap:1rem">
+        <div class="footer-copyright">
+          &copy; 2026 ZSD's Blog. Built with ❤️
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/banluo2006" target="_blank" rel="noopener">github.com/banluo2006</a>
+          <a href="javascript:void(0)" data-email="true" onclick="copyEmail()" title="点击复制邮箱">3112371653@qq.com</a>
+        </div>
       </div>
-      <div class="footer-links">
-        <a href="https://github.com/banluo2006" target="_blank" rel="noopener">GitHub</a>
-        <a href="mailto:3112371653@qq.com">Email</a>
+      <div style="font-size:0.75rem;color:var(--color-text-muted);text-align:center;width:100%;border-top:1px solid rgba(255,255,255,0.08);padding-top:0.75rem;line-height:1.6">
+        免责声明：本博客所有内容仅供个人学习参考，不构成任何建议。转载文章请联系作者获取授权。
       </div>
     </div>
   </footer>
