@@ -5,8 +5,8 @@ const SITE_CONFIG = {
   bio: "热爱编程的 C++ 学习者，正在探索算法与底层系统的奥秘。用代码记录成长，用博客分享思考。",
   avatar: "Z",
   social: {
-    github: "https://github.com/",
-    email: "mailto:zsd20@example.com",
+    github: "https://github.com/banluo2006",
+    email: "mailto:3112371653@qq.com",
   },
   nav: [
     { label: "首页", href: "index.html" },
